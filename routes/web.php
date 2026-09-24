@@ -15,7 +15,7 @@ use App\Http\Controllers\MedicineScanController;
 */
 
 Route::get('/', function () {
-    return view('welcome');
+    return auth()->check() ? redirect()->route('dashboard') : redirect()->route('login');
 });
 
 Route::get('/dashboard', [DashboardController::class, 'index'])->middleware(['auth', 'verified'])->name('dashboard');
