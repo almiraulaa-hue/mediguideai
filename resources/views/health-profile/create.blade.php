@@ -70,6 +70,11 @@
                         Simpan Profil
                     </button>
                 </form>
+                <div class="text-center mt-3">
+    <a href="{{ route('dashboard') }}" class="text-sm text-gray-400 hover:text-gray-600">
+        Lewati untuk sekarang, isi nanti
+    </a>
+</div>
 
             </div>
         </div>
