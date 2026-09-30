@@ -12,12 +12,14 @@ class MedicineReminder extends Model
     protected $fillable = [
         'user_id', 'medicine_name', 'dosage_form', 'dosage', 'note',
         'time', 'start_date', 'repeat_days', 'frequency', 'is_active',
+        'notify_enabled',
     ];
 
     protected $casts = [
         'repeat_days' => 'array',
         'is_active' => 'boolean',
         'start_date' => 'date',
+        'notify_enabled' => 'boolean',
     ];
 
     public function user()

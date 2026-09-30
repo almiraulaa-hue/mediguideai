@@ -7,11 +7,11 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
-use App\Models\HealthProfile;
+use NotificationChannels\WebPush\HasPushSubscriptions;
 
 class User extends Authenticatable
 {
-    use HasApiTokens, HasFactory, Notifiable;
+    use HasApiTokens, HasFactory, Notifiable, HasPushSubscriptions;
 
     /**
      * The attributes that are mass assignable.
@@ -43,24 +43,24 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
         'password' => 'hashed',
     ];
+
     public function healthProfile()
-{
-    return $this->hasOne(HealthProfile::class);
-}  
-public function consultations()
-{
-    return $this->hasMany(Consultation::class);
-}
+    {
+        return $this->hasOne(HealthProfile::class);
+    }
 
-public function medicineReminders()
-{
-    return $this->hasMany(MedicineReminder::class);
-}
+    public function consultations()
+    {
+        return $this->hasMany(Consultation::class);
+    }
 
-public function medicineScans()
-{
-    return $this->hasMany(MedicineScan::class);
-}
+    public function medicineReminders()
+    {
+        return $this->hasMany(MedicineReminder::class);
+    }
 
-
+    public function medicineScans()
+    {
+        return $this->hasMany(MedicineScan::class);
+    }
 }

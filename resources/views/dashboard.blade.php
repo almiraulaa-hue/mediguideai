@@ -104,7 +104,13 @@
             <div class="bg-white rounded-3xl shadow-sm p-6">
                 <div class="flex items-center justify-between mb-4">
                     <h3 class="font-bold text-gray-900 text-base">Pengingat Obat Hari Ini</h3>
-                    <a href="{{ route('reminder.index') }}" class="text-xs text-forest-700 font-medium border border-forest-200 px-3 py-1.5 rounded-full hover:bg-forest-50 transition">Lihat Semua</a>
+                    <div class="flex items-center gap-2">
+                        <button id="enable-notif-btn" type="button"
+                            class="text-xs bg-indigo-600 text-white font-medium px-3 py-1.5 rounded-full hover:bg-indigo-700 transition">
+                            🔔 Aktifkan Notifikasi
+                        </button>
+                        <a href="{{ route('reminder.index') }}" class="text-xs text-forest-700 font-medium border border-forest-200 px-3 py-1.5 rounded-full hover:bg-forest-50 transition">Lihat Semua</a>
+                    </div>
                 </div>
 
                 @forelse ($reminders as $r)
@@ -132,9 +138,15 @@
                             @else
                                 <span class="text-xs bg-green-50 text-green-600 px-3 py-1.5 rounded-full font-medium">Belum diminum</span>
                             @endif
-                            <button class="w-8 h-8 rounded-full bg-gray-50 flex items-center justify-center text-gray-400 flex-shrink-0">
-                                <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" /></svg>
-                            </button>
+                            <form method="POST" action="{{ route('reminder.toggle-notify', $r->id) }}">
+                                @csrf
+                                @method('PATCH')
+                                <button type="submit"
+                                    title="{{ $r->notify_enabled ? 'Matikan notifikasi' : 'Aktifkan notifikasi' }}"
+                                    class="w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0 transition {{ $r->notify_enabled ? 'bg-indigo-100 text-indigo-600' : 'bg-gray-50 text-gray-400' }}">
+                                    <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" /></svg>
+                                </button>
+                            </form>
                         </div>
                     </div>
                 @empty

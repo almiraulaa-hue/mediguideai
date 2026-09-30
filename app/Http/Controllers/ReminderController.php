@@ -33,6 +33,19 @@ class ReminderController extends Controller
     return view('reminder.index', compact('reminders', 'compliancePercentage', 'recentLogs'));
 }
 
+
+
+public function toggleNotify(MedicineReminder $reminder)
+{
+    abort_unless($reminder->user_id === auth()->id(), 403);
+
+    $reminder->update([
+        'notify_enabled' => ! $reminder->notify_enabled,
+    ]);
+
+    return back();
+}
+
     public function create()
     {
         return view('reminder.create');
