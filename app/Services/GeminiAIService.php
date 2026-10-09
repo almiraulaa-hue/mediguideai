@@ -55,6 +55,7 @@ class GeminiAIService
     /**
      * Chat dengan output terstruktur JSON (untuk konsultasi natural bertahap).
      */
+
     public function chatStructured(array $conversationHistory, string $systemContext): array
     {
         $messages = [];
@@ -88,15 +89,24 @@ class GeminiAIService
         $text = preg_replace('/```json|```/', '', $text);
         $text = trim($text);
 
+        // Ambil cuma bagian {...} nya, buang teks naratif yang mungkin nyasar di luar JSON
+        if (preg_match('/\{.*\}/s', $text, $matches)) {
+            $text = $matches[0];
+        }
+
         $data = json_decode($text, true);
 
         if (!is_array($data) || !isset($data['message'])) {
-            return ['message' => $text ?: 'Maaf, saya tidak bisa memproses itu.', 'quick_replies' => [], 'is_final' => false];
+            \Log::warning('Gemini output gagal di-parse sebagai JSON', ['raw' => $text]);
+            return ['message' => 'Maaf, saya mengalami kendala memproses jawaban. Bisa diulangi?', 'quick_replies' => [], 'is_final' => false];
         }
+
+        // Bersihkan markdown yang mungkin masih lolos dari instruksi prompt
+        $data['message'] = preg_replace(['/\*\*(.*?)\*\*/', '/^\s*[\*\-]\s+/m'], ['$1', '• '], $data['message']);
 
         return $data;
     }
-
+    
     public function analyzeMedicineImage(string $base64Image, string $mimeType): array
     {
         $prompt = <<<PROMPT
